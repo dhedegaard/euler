@@ -16,7 +16,7 @@ struct node *parse(const char *);
 int recursivesum(struct node *);
 
 int main(int argc, char **argv) {
-	struct node *top = parse("euler18-data");
+	struct node *top = parse("euler67-data");
 	if (top != NULL)
 		printf("%d\n", recursivesum(top));
 	else
