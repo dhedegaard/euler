@@ -14,11 +14,14 @@ struct node {
 
 struct node *parse(const char *);
 int recursivesum(struct node *);
+void freetree(struct node *);
 
 int main(int argc, char **argv) {
 	struct node *top = parse("euler18-data");
-	if (top != NULL)
+	if (top != NULL) {
 		printf("%d\n", recursivesum(top));
+		freetree(top);
+	}
 	else
 		return 1;
 	return 0;
@@ -37,6 +40,18 @@ int recursivesum(struct node *node) {
 	}
 	else
 		return node->sum;
+}
+
+void freetree(struct node *node) {
+        if (node->left != NULL)
+                freetree(node->left);
+        if (node->right != NULL)
+                freetree(node->right);
+        if (node->parentleft != NULL)
+                node->parentleft->right = NULL;
+        if (node->parentright != NULL)
+                node->parentright->left = NULL;
+        free(node);
 }
 
 struct node *parse(const char *filename) {
