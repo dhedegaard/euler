@@ -12,4 +12,4 @@ while (@count < 1000) {
         $i++;
 	@count = split(//, $fn);
 }
-print $i . "\n";
+print $fn . "\n" . $i . "\n";
