@@ -29,12 +29,12 @@ int main(int argc, char **argv) {
 
 int recursivesum(struct node *node) {
 	if (node->sum == 0) {
-		int left = 0, right = 0, sum;
+		int left = 0, right = 0, sum = node->value;
 		if (node->left != NULL)
 			left = recursivesum(node->left);
 		if (node->right != NULL)
 			right = recursivesum(node->right);
-		sum = (left > right ? left : right) + node->value;
+		sum += left > right ? left : right;
 		node->sum = sum;
 		return sum;
 	}
@@ -43,15 +43,15 @@ int recursivesum(struct node *node) {
 }
 
 void freetree(struct node *node) {
-        if (node->left != NULL)
-                freetree(node->left);
-        if (node->right != NULL)
-                freetree(node->right);
-        if (node->parentleft != NULL)
-                node->parentleft->right = NULL;
-        if (node->parentright != NULL)
-                node->parentright->left = NULL;
-        free(node);
+	if (node->left != NULL)
+		freetree(node->left);
+	if (node->right != NULL)
+		freetree(node->right);
+	if (node->parentleft != NULL)
+		node->parentleft->right = NULL;
+	if (node->parentright != NULL)
+		node->parentright->left = NULL;
+	free(node);
 }
 
 struct node *parse(const char *filename) {
