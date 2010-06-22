@@ -5,22 +5,21 @@ use warnings;
 my $a = ord('A') - 1;
 sub namevalue {
 	# gets the value of a name, takes a name and a hashtable for args.
-	my $value = 0;
+	my $result = 0;
 	my ($name) = @_ or die "bad args" . $!;
-	my @chars = split(//, $name);
-	foreach my $c (@chars) {
-		$value += ord($c) - $a;
+	foreach ($name =~ m/(.)/g) {
+		$result += ord($_) - $a;
 	}
-	return $value;
+	return $result;
 }
-open FILE, "<euler22-data";
+open FILE, "<euler22-data" or die "unable to find euler22-data in wordir\n" . $!;
+# the following regex takes a match of anything not a ',' between a " and a ".
 my @lines = sort <FILE> =~ m/"([^,]*)"/sg;
+close FILE;
 my $count = 1;
 my $result = 0;
 foreach my $line (@lines) {
 	my $value = &namevalue($line);
-	$result += $value * $count;
-	print $count++ . ": " . $line . ": " . &namevalue($line) . "\n";
+	$result += $value * $count++;
 }
-close FILE;
 print $result . "\n";
