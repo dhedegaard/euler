@@ -2,11 +2,14 @@
 use strict;
 use warnings;
 
+# How many Sundays fell on the first of the month during
+# the twentieth century (1 Jan 1901 to 31 Dec 2000)?
+
 # defines number of days in each month in a non leap-year.
 my @months = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 # a simple function, that checks if a year is a leapyear.
 sub isleapyear{
-	my ($year) = @_ or die "bad args" . $!;
+	my ($year) = @_ or die "bad args, please supply a year" . $!;
 	if ($year % 4 == 0) {
 		if ($year % 100 == 0) {
 			if ($year % 400 == 0) {
@@ -24,6 +27,7 @@ sub isleapyear{
 # 1. jan 1900 is a monday.
 my $weekday = 0;
 # let's move forward 1 year, to 1. jan 1901.
+# 1900 is not a leap year, so no worries.
 for (my $month = 0;$month < 12;$month++) {
 	$weekday = ($weekday + $months[$month]) % 7;
 }
