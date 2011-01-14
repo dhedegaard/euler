@@ -110,9 +110,11 @@ bool is_circular_prime(unsigned num) {
 		// copy from pos to end exclusive.
 		for (vector<int>::iterator _pos = pos; _pos != v.end(); _pos++)
 			arr[i++] = *_pos;
+//			arr.push_back(*_pos);
 		// copy from begin to pos exclusive.
 		for (vector<int>::iterator _pos = v.begin(); _pos != pos; _pos++)
 			arr[i++] = *_pos;
+//			arr.push_back(*_pos);
 		// Check the number and return false, if it's not a prime number.
 		if (!assemble_and_check(arr))
 			return false;
