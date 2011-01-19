@@ -6,16 +6,15 @@
  */
 
 #include <iostream>
-#include <gmpxx.h>
 
 using namespace std;
 
-mpz_class next_triangle();
-mpz_class next_pentagonal();
-mpz_class next_hexagonal();
+long long next_triangle();
+long long next_pentagonal();
+long long next_hexagonal();
 
 int main(int argc, char **argv) {
-	mpz_class triangle = next_triangle(), pentagonal = next_pentagonal(),
+	long long triangle = next_triangle(), pentagonal = next_pentagonal(),
 			hexagonal = next_hexagonal();
 	while (true) {
 		if (triangle < pentagonal || triangle < hexagonal)
@@ -33,33 +32,33 @@ int main(int argc, char **argv) {
 	}
 }
 
-mpz_class next_triangle() {
+long long next_triangle() {
 	static long i = 2;
-	mpz_class tmp(i);
-	tmp += 1;
-	tmp *= i;
-	tmp /= 2;
+	long long tmp = i;
+	tmp += (long long) 1;
+	tmp *= (long long) i;
+	tmp /= (long long) 2;
 	i++;
 	return tmp;
 }
 
-mpz_class next_pentagonal() {
+long long next_pentagonal() {
 	static long i = 2;
-	mpz_class tmp(i);
-	tmp *= 3;
-	tmp -= 1;
-	tmp *= i;
-	tmp /= 2;
+	long long tmp = i;
+	tmp *= (long long) 3;
+	tmp -= (long long) 1;
+	tmp *= (long long) i;
+	tmp /= (long long) 2;
 	i++;
 	return tmp;
 }
 
-mpz_class next_hexagonal() {
+long long next_hexagonal() {
 	static long i = 2;
-	mpz_class tmp(i);
-	tmp *= 2;
-	tmp -= 1;
-	tmp *= i;
+	long long tmp = i;
+	tmp *= (long long) 2;
+	tmp -= (long long) 1;
+	tmp *= (long long) i;
 	i++;
 	return tmp;
 }
