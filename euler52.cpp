@@ -14,7 +14,6 @@
 using namespace std;
 
 bool check(const int num, const int cap);
-void print_set(const set<int> set);
 
 int main() {
 	for (int i = 1; true; i++)
@@ -51,15 +50,4 @@ bool check(int num, const int cap) {
 		}
 	}
 	return true;
-}
-
-void print_set(const set<int> s) {
-	cout << "[";
-	for (set<int>::const_iterator ite = s.begin(); ite != s.end();) {
-		cout << *ite;
-		ite++;
-		if (ite != s.end())
-			cout << ", ";
-	}
-	cout << "]";
 }
