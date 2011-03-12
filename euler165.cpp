@@ -11,11 +11,11 @@
 #include <cassert>
 #include <cmath>
 #include <set>
+#include <sys/types.h>
 
 using namespace std;
 
-#define INVAL_COORD -1000
-#define PRECISION 0.00000000000000001L
+#define INVAL_COORD -1000l
 
 /**
  * Repressents a point in a 2-dimensional space.
@@ -24,19 +24,14 @@ struct t_point {
 	long double x, y;
 
 	t_point() {
-		x = INVAL_COORD;
-		y = INVAL_COORD;
 	}
-
 	t_point(long double _x, long double _y) {
 		x = _x;
 		y = _y;
 	}
 
 	bool operator ==(const t_point &p) const {
-		return x < p.x ? p.x - x < PRECISION
-				: x - p.x < PRECISION && y < p.y ? p.y - y < PRECISION : y
-						- p.y < PRECISION;
+		return x == p.x && y == p.y;
 	}
 
 	bool operator !=(const t_point &p) const {
@@ -46,13 +41,13 @@ struct t_point {
 
 	bool operator <(const t_point &p) const {
 		long double x_delta = x - p.x;
-		if (x_delta < -PRECISION)
+		if (x_delta < 0)
 			return true;
-		else if (x_delta > PRECISION)
+		else if (x_delta > 0)
 			return false;
 		else {
 			long double y_delta = y - p.y;
-			if (y_delta < -PRECISION)
+			if (y_delta < 0)
 				return true;
 			else
 				return false;
@@ -61,13 +56,13 @@ struct t_point {
 
 	bool operator >(const t_point &p) const {
 		long double x_delta = x - p.x;
-		if (x_delta > PRECISION)
+		if (x_delta > 0)
 			return true;
-		else if (x_delta < -PRECISION)
+		else if (x_delta < 0)
 			return false;
 		else {
 			long double y_delta = y - p.y;
-			if (y_delta > PRECISION)
+			if (y_delta > 0)
 				return true;
 			else
 				return false;
@@ -82,8 +77,14 @@ struct t_point {
 		return t_point(x + p.x, y + p.y);
 	}
 
+	// times the coordinates with d.
 	struct t_point operator *(const long double d) const {
 		return t_point(x * d, y * d);
+	}
+
+	// dot_product of 2 points/vectors.
+	long double operator *(const t_point &p) const {
+		return x * p.x + y * p.y;
 	}
 }typedef point;
 
@@ -98,34 +99,35 @@ ostream &operator <<(ostream &stream, const point& p) {
 /**
  * Repressents a line, with 2 points.
  */
-struct _line {
+struct t_line {
 	point p1, p2;
+
+	t_line(point _p1, point _p2) {
+		p1 = _p1;
+		p2 = _p2;
+	}
 }typedef line;
 
 /**
  * Implements the blum blum shub pseudo-random number generator, it
  * returns the number requested in a vector.
  */
-static vector<int> blum_blum_shub(int count);
+static vector<int64_t> blum_blum_shub(int count);
 /**
  * Returns NULL(0x0) if they don't true intersect, else they return the point they
  * intersect in.
  */
 static point intersect(line l1, line l2);
-/**
- * Used for generating the dot-product of 2 points (or vectors in 2d).
- */
-static long double dot_product(const point p1, const point p2);
 
 int main(int argc, char **argv) {
 	cout << "running blum blum shub.. " << flush;
-	vector<int> shub = blum_blum_shub(5000);
+	vector<int64_t> shub = blum_blum_shub(5000);
 	cout << "done" << endl;
 	assert(shub.size() == 5000);
 	vector<line> lines;
 	cout << "generate lines.. " << flush;
-	for (vector<int>::iterator ite = shub.begin(); ite != shub.end();) {
-		line l;
+	for (vector<int64_t>::iterator ite = shub.begin(); ite != shub.end();) {
+		line l(point((*ite)++, (*ite)++), point((*ite)++, (*ite)++));
 		l.p1.x = *ite++ % 500;
 		l.p1.y = *ite++ % 500;
 		l.p2.x = *ite++ % 500;
@@ -153,44 +155,44 @@ int main(int argc, char **argv) {
 	return 0;
 }
 
-static vector<int> blum_blum_shub(int count) {
-	long long s = 290797;
-	vector<int> result;
+static vector<int64_t> blum_blum_shub(int count) {
+	int64_t s = 290797;
+	vector<int64_t> result;
 	while (count-- > 0) {
 		s = (s * s) % 50515093;
-		result.push_back((int) s);
+		result.push_back(s % 500);
 	}
 	return result;
-}
-
-static long double dot_product(const point p1, const point p2) {
-	// A*B = Ax*Bx + Ay*By
-	return p1.x * p2.x + p1.y * p2.y;
 }
 
 // http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
 static point intersect(line l1, line l2) {
 	// E = B-A = ( Bx-Ax, By-Ay )
-	point e(l1.p2 - l1.p1);
+	point E(l1.p2 - l1.p1);
 
 	// F = D-C = ( Dx-Cx, Dy-Cy )
-	point f(l2.p2 - l2.p1);
+	point F(l2.p2 - l2.p1);
 
 	// P = ( -Ey, Ex )
-	point p(-1 * e.y, e.x);
+	point P(-1 * E.y, E.x);
 
-	// check for parallel lines, if F*P == 0
-	if (f.x * p.x == 0 && f.y * p.y == 0)
+	// Q = ( -Fy, Fx )
+	point Q(-1 * F.y, F.x);
+
+	// check for parallel lines, if F*P == 0 or E*Q == 0
+	if (F * P == 0 || E * Q == 0)
 		return point(INVAL_COORD, INVAL_COORD);
 
 	// h = ( (A-C) * P ) / ( F * P )
-	// long double h = dot_product(minus_point(l1.p1, l2.p1), p) / dot_product(f, p);
-	long double h = dot_product(l1.p1 - l2.p1, p) / dot_product(f, p);
+	long double h = ((l1.p1 - l2.p1) * P) / (F * P);
+	// g = ( (C-A) * Q ) / ( E * Q )
+	long double g = ((l2.p1 - l1.p1) * Q) / (E * Q);
 
-	// if h is less or equal 0, or equal or higher than 1, they don't true intersect.
-	if (h <= 0 || h > 1)
+	// if h or g is less or equal 0, or equal or higher than 1,
+	// they don't true intersect.
+	if (h < 0 || h > 1)// || g < 0 || g > 1)
 		return point(INVAL_COORD, INVAL_COORD);
+
 	// The point of intersection is: C + F*h
-	point result = l2.p1 + f * h;
-	return result;
+	return l2.p1 + F * h;
 }
