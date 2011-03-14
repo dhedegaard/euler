@@ -102,6 +102,8 @@ ostream &operator <<(ostream &stream, const point& p) {
 struct t_line {
 	point p1, p2;
 
+	t_line() {
+	}
 	t_line(point _p1, point _p2) {
 		p1 = _p1;
 		p2 = _p2;
@@ -112,7 +114,7 @@ struct t_line {
  * Implements the blum blum shub pseudo-random number generator, it
  * returns the number requested in a vector.
  */
-static vector<int64_t> blum_blum_shub(int count);
+static vector<long> blum_blum_shub(int count);
 /**
  * Returns NULL(0x0) if they don't true intersect, else they return the point they
  * intersect in.
@@ -121,26 +123,24 @@ static point intersect(line l1, line l2);
 
 int main(int argc, char **argv) {
 	cout << "running blum blum shub.. " << flush;
-	vector<int64_t> shub = blum_blum_shub(5000);
+	vector<long> shub = blum_blum_shub(5000);
 	cout << "done" << endl;
 	assert(shub.size() == 5000);
 	vector<line> lines;
 	cout << "generate lines.. " << flush;
-	for (vector<int64_t>::iterator ite = shub.begin(); ite != shub.end();) {
-		line l(point((*ite)++, (*ite)++), point((*ite)++, (*ite)++));
-		l.p1.x = *ite++ % 500;
-		l.p1.y = *ite++ % 500;
-		l.p2.x = *ite++ % 500;
-		l.p2.y = *ite++ % 500;
-		lines.push_back(l);
-	}
+	// push the numbers onto points in lines on a vector.
+	for (vector<long>::iterator ite = shub.begin(); ite != shub.end();)
+		lines.push_back(
+				line(point(*ite++ % 500, *ite++ % 500),
+						point(*ite++ % 500, *ite++ % 500)));
 	cout << "done" << endl;
 	set<point> points;
 	int count = 0;
+	static point inval = point(INVAL_COORD, INVAL_COORD);
 	for (vector<line>::iterator ite = lines.begin(); ite != lines.end(); ite++)
 		for (vector<line>::iterator ite2 = ite + 1; ite2 != lines.end(); ite2++) {
 			point p = intersect(*ite, *ite2);
-			if (p.x != INVAL_COORD && p.y != INVAL_COORD) {
+			if (p != inval) {
 				// cout << p.x << "," << p.y << endl;
 				count++;
 				set<point>::iterator ite = points.find(p);
@@ -155,9 +155,9 @@ int main(int argc, char **argv) {
 	return 0;
 }
 
-static vector<int64_t> blum_blum_shub(int count) {
-	int64_t s = 290797;
-	vector<int64_t> result;
+static vector<long> blum_blum_shub(int count) {
+	long s = 290797;
+	vector<long> result;
 	while (count-- > 0) {
 		s = (s * s) % 50515093;
 		result.push_back(s % 500);
@@ -194,5 +194,5 @@ static point intersect(line l1, line l2) {
 		return point(INVAL_COORD, INVAL_COORD);
 
 	// The point of intersection is: C + F*h
-	return l2.p1 + F * h;
+	return l2.p1 + (F * h);
 }
