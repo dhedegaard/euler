@@ -32,6 +32,7 @@ int main(int argc, char **argv) {
 		}
 		curline++;
 	}
+	in.close();
 	cout << "-------------------------" << endl;
 	cout << "max is at line " << linenum << endl;
 	return 0;
