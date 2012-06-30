@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 		for (x = 0;x < 20;x++)
 			arr[y][x] = 0;
 	printf("opening file pointer..\n");
-	FILE *f = fopen("euler11-data", "r");
+	FILE *f = fopen("euler011-data", "r");
 	if (!f) {
 		fprintf(stderr, "error opening file pointer: %s\n", strerror(errno));
 		exit(1);
