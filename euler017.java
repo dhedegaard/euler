@@ -75,6 +75,9 @@ public class euler017 {
 		    } catch (NumberFormatException e) {
 			System.err.println(String.format("NumberFormatException: Argument not valid because: %s", e.getMessage()));
 			System.exit(1);
+		    } catch (InvalidParameterException e) {
+			System.err.println(String.format("InvalidParameterException: Argument supplied is not within valid range: %s", e.getMessage()));
+			System.exit(1);
 		    }
 		else
 		    System.out.println(countTo(1000));
