@@ -1,4 +1,6 @@
-public class euler17 {
+import java.security.InvalidParameterException;
+
+public class euler017 {
 	/**
 	 * For all % 10's.
 	 */
@@ -67,6 +69,14 @@ public class euler17 {
 			throw new RuntimeException(String.valueOf(getNumber(342).length()));
 		if (getNumber(115).length() != 20)
 			throw new RuntimeException(String.valueOf(getNumber(115).length()));
-		System.out.println(countTo(1000));
+		if (args.length == 1)
+		    try {
+			System.out.println(countTo(Integer.valueOf(args[0])));
+		    } catch (NumberFormatException e) {
+			System.err.println(String.format("NumberFormatException: Argument not valid because: %s", e.getMessage()));
+			System.exit(1);
+		    }
+		else
+		    System.out.println(countTo(1000));
 	}
 }
