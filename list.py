@@ -67,13 +67,17 @@ def main():
             eulers[i] = []
 
     # print the aggregated output
+    print 'Euler problems:'
     for k,v in sorted(eulers.items()):
         print '%3s:\t%s' % (k, ', '.join(v))
 
-    string_languages = ', '.join(['%s(%d)' % (k,v) for k,v in sorted(languages.items(), key=lambda x: x[1], reverse=True)],)
+    print
+    # print the languages used
+    print 'Languages used:'
+    for language, count in sorted(languages.items(), key=lambda x: x[1], reverse=True):
+        print '%s:\t%d' % (language, count)
 
     print '\nNumber of problems with code: %d' % count_problems
-    print 'Programming languages used: %s' % string_languages
 
 if __name__ == '__main__':
     main()
