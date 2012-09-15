@@ -1,20 +1,8 @@
 #!/usr/bin/python
 
-def sum_of_square(cap):
-    sum = 0
-    for i in xrange(1, cap + 1):
-        sum += i ** 2
-    return sum
+CAP = 100
 
-def square_of_sum(cap):
-    sum = 0
-    for i in xrange(1, cap + 1):
-        sum += i
-    sum **= 2
-    return sum
+sum_square = sum([e**2 for e in xrange(1, CAP+1)])
+square_sum = sum(xrange(1, CAP+1))**2
 
-cap = 100
-sum_square = sum_of_square(cap)
-square_sum = square_of_sum(cap)
-diff = square_sum - sum_square
-print "%d - %d = %d" % (square_sum, sum_square, diff)
+print max(sum_square, square_sum) - min(sum_square, square_sum)
