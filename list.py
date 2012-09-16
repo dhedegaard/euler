@@ -15,7 +15,7 @@ import os.path
 import re
 
 # Regex for valid filename (eg euler067.cpp), capture euler number.
-EULER_MATCH = re.compile('^euler(\d+)\.\w+$')
+EULER_MATCH = re.compile('^euler(\d+)')
 
 # File extensions to identify
 FILETYPES = {
@@ -26,7 +26,27 @@ FILETYPES = {
     '.pl'   : 'Perl',
     '.java' : 'Java',
     '.cs'   : 'C#',
+    '.sh'   : '(B)ASH shell script',
 }
+
+def find_language_for_directory(dir):
+    '''
+    Estimates the language used for the directory specified.
+    Simply walks through all files and returns languages for
+    all types found.
+
+    (dir: string) -> list of languages
+    '''
+    result = set()
+    for root, dirs, files in os.walk(dir):
+        for file in files:
+            ext = os.path.splitext(file)[1]
+            if ext and ext in FILETYPES and not FILETYPES[ext] in result:
+                result.add(FILETYPES[ext])
+    if len(result) > 0:
+        return list(result)
+    else:
+        return None
 
 def main():
     '''
@@ -40,24 +60,36 @@ def main():
     languages = {}
 
     for f in sorted(os.listdir(os.path.dirname(os.path.realpath(__file__)))):
-        ext = os.path.splitext(f)[1]
+
         match = EULER_MATCH.match(f)
 
-        if not match or ext not in FILETYPES:
+        if not match:
             continue
 
+        if os.path.isdir(f):
+            language = find_language_for_directory(f)
+            if language == None:
+                continue
+            
+        else:
+            ext = os.path.splitext(f)[1]
+            if ext not in FILETYPES:
+                continue
+            language = (FILETYPES[ext],)
+
         eulernumber = int(match.groups()[0])
-        language = FILETYPES[ext]
 
         if not eulers.has_key(eulernumber):
-            eulers[eulernumber] = [language]
+            eulers[eulernumber] = set(language)
         else:
-            eulers[eulernumber].append(language)
+            for l in language:
+                eulers[eulernumber].add(l)
 
-        if not languages.has_key(language):
-            languages[language] = 1
-        else:
-            languages[language] += 1
+        for l in language:
+            if not languages.has_key(l):
+                languages[l] = 1
+            else:
+                languages[l] += 1
 
     count_problems = len(eulers.keys())
 
