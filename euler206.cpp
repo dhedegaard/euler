@@ -6,7 +6,7 @@ using namespace std;
 const long double MAX = 1929394959697989990.0;
 const long double MIN = 1020304050607080900.0;
 
-static inline bool check_number(long long num) {
+static inline bool check_number(long num) {
   int digit;
   int i = 0;
   do {
@@ -32,14 +32,14 @@ static inline bool check_number(long long num) {
 int main(int argc, char* argv[]) {
   cout << fixed;
 
-  long long realmax = (long long) ceill(sqrtl(MAX));
-  long long realmin = (long long) floorl(sqrtl(MIN));
+  long realmax = (long) ceill(sqrtl(MAX));
+  long realmin = (long) floorl(sqrtl(MIN));
 
   cout << "realmin: " << realmin << endl;
   cout << "realmax: " << realmax << endl;
 
-  for (long long i = realmin; i <= realmax;i++) {
-    long long isqrt = i * i;
+  for (long i = realmin; i <= realmax;i++) {
+    long isqrt = i * i;
     if (check_number(isqrt))
       cout << i << ": " << isqrt << endl;
   }
