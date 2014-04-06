@@ -27,6 +27,7 @@ FILETYPES = {
     '.java' : 'Java',
     '.cs'   : 'C#',
     '.sh'   : '(B)ASH shell script',
+    '.js'   : 'Javascript (node)',
 }
 
 def find_language_for_directory(dir):
@@ -70,7 +71,7 @@ def main():
             language = find_language_for_directory(f)
             if language == None:
                 continue
-            
+
         else:
             ext = os.path.splitext(f)[1]
             if ext not in FILETYPES:
