@@ -1,17 +1,16 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
 A simple script for listing euler problems solved, and the
 languages used for solving them.
 
-Put the script in the directory with the euler sollutions and
+Put the script in the directory with the euler solutions and
 run it.
 
 @author: Dennis Hedegaard
 '''
 
 import os
-import os.path
 import re
 
 # Regex for valid filename (eg euler067.cpp), capture euler number.
@@ -19,16 +18,18 @@ EULER_MATCH = re.compile('^euler(\d+)')
 
 # File extensions to identify
 FILETYPES = {
-    '.c'    : 'C',
-    '.cpp'  : 'C++',
-    '.py'   : 'Python',
-    '.rb'   : 'Ruby',
-    '.pl'   : 'Perl',
-    '.java' : 'Java',
-    '.cs'   : 'C#',
-    '.sh'   : '(B)ASH shell script',
-    '.js'   : 'Javascript (node)',
+    '.c': 'C',
+    '.cpp': 'C++',
+    '.py': 'Python',
+    '.rb': 'Ruby',
+    '.pl': 'Perl',
+    '.java': 'Java',
+    '.cs': 'C#',
+    '.sh': '(B)ASH shell script',
+    '.js': 'Javascript',
+    '.rs': 'Rust',
 }
+
 
 def find_language_for_directory(dir):
     '''
@@ -42,12 +43,13 @@ def find_language_for_directory(dir):
     for root, dirs, files in os.walk(dir):
         for file in files:
             ext = os.path.splitext(file)[1]
-            if ext and ext in FILETYPES and not FILETYPES[ext] in result:
-                result.add(FILETYPES[ext])
+            if ext and FILETYPES[ext] not in result:
+                result.add(FILETYPES.get(ext, 'unknown (%s)' % ext))
     if len(result) > 0:
         return list(result)
     else:
         return None
+
 
 def main():
     '''
@@ -69,7 +71,7 @@ def main():
 
         if os.path.isdir(f):
             language = find_language_for_directory(f)
-            if language == None:
+            if language is None:
                 continue
 
         else:
@@ -80,14 +82,14 @@ def main():
 
         eulernumber = int(match.groups()[0])
 
-        if not eulers.has_key(eulernumber):
+        if eulernumber not in eulers:
             eulers[eulernumber] = set(language)
         else:
             for l in language:
                 eulers[eulernumber].add(l)
 
         for l in language:
-            if not languages.has_key(l):
+            if l not in languages:
                 languages[l] = 1
             else:
                 languages[l] += 1
@@ -96,19 +98,20 @@ def main():
 
     # append empty (unsolved) problems to the dict.
     for i in xrange(1, max(eulers)):
-        if not eulers.has_key(i):
+        if i not in eulers:
             eulers[i] = []
 
     # print the aggregated output
     print 'Euler problems:'
-    for k,v in sorted(eulers.items()):
+    for k, v in sorted(eulers.items()):
         print '%8s:\t%s' % (k, ', '.join(v))
 
     print
     # print the languages used
     print 'Languages used:'
-    for language, count in sorted(languages.items(), key=lambda x: x[1], reverse=True):
-        print '%8s:\t%d' % (language, count)
+    for language, count in sorted(languages.items(), key=lambda x: x[1],
+                                  reverse=True):
+        print '%10s:\t%d' % (language, count)
 
     print '\nNumber of problems with code: %d' % count_problems
 
