@@ -28,6 +28,7 @@ FILETYPES = {
     '.sh': '(B)ASH shell script',
     '.js': 'Javascript',
     '.rs': 'Rust',
+    '.go': 'Go',
 }
 
 
