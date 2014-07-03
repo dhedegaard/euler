@@ -2,11 +2,11 @@ package main
 
 import "fmt"
 
-func fibonacci_sequence() (c chan int) {
+func fibonacci_sequence(cap int) (c chan int) {
 	c = make(chan int)
 	go func() {
 		a, b := 1, 0
-		for {
+		for a < cap {
 			c <- a
 			a, b = a+b, a
 		}
@@ -17,10 +17,7 @@ func fibonacci_sequence() (c chan int) {
 
 func main() {
 	sum := 0
-	for val := range fibonacci_sequence() {
-		if val > 4000000 {
-			break
-		}
+	for val := range fibonacci_sequence(4000000) {
 		if val%2 == 0 {
 			sum += val
 		}
