@@ -1,0 +1,1 @@
+println((0 until 1000).filter(e => e % 3 == 0 || e % 5 == 0).sum)
