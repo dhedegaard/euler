@@ -1,6 +1,4 @@
 #!/usr/bin/python
+from __future__ import print_function
 
-sum = 0
-for c in str(2 ** 1000):
-    sum += int(c)
-print sum
+print(sum(map(int, list(str(2 ** 1000)))))
